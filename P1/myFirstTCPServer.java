@@ -1,5 +1,6 @@
 import java.net.*;  // for Socket, ServerSocket, and InetAddress
 import java.io.*;   // for IOException and Input/OutputStream
+import java.util.Arrays;
 
 public class myFirstTCPServer {
 
@@ -28,13 +29,16 @@ public class myFirstTCPServer {
       InputStream in = clntSock.getInputStream();
       OutputStream out = clntSock.getOutputStream();
 
-      
-
       // Receive until client closes connection, indicated by -1 return
-      while ((recvMsgSize = in.read(byteBuffer)) != -1)
-        out.write(byteBuffer, 0, recvMsgSize);
-        System.out.println(reverse(new String(byteBuffer))); 
-
+      while ((recvMsgSize = in.read(byteBuffer)) != -1) {
+        StringBuilder sb = new StringBuilder(new String(byteBuffer));
+        String reversed = sb.reverse().toString().trim(); 
+        byteBuffer = reversed.getBytes(); 
+        System.out.println(reversed);
+        out.write(byteBuffer,0, recvMsgSize); 
+      }
+      
+      byteBuffer = new byte[BUFSIZE]; 
       clntSock.close();  // Close the socket.  We are done with this client!
     }
     /* NOT REACHED */

@@ -46,11 +46,11 @@ public class myFirstTCPClient {
           throw new SocketException("Connection close prematurely");
         totalBytesRcvd += bytesRcvd;
       }
-  
-      System.out.println("Received: " + new String(byteBuffer));
-  
       // end timer 
-      long endTime = System.nanoTime(); 
+      long endTime = System.nanoTime();
+
+      System.out.println("Received: " + new String(byteBuffer));
+       
       System.out.println("The response took " + Long.toString(endTime - startTime) + " Nanoseconds"); 
   
       socket.close();  // Close the socket and its streams

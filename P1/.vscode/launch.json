@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - myFirstTCPClient",
+            "request": "launch",
+            "mainClass": "myFirstTCPClient",
+            "projectName": "P1_2f0a06b1"
+        }
+    ]
+}
