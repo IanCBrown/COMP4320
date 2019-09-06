@@ -1,7 +1,7 @@
 import java.net.*;  // for DatagramSocket, DatagramPacket, and InetAddress
 import java.io.*;   // for IOException
 
-public class UDPEchoServer {
+public class myFirstUDPServer {
 
   private static final int ECHOMAX = 255;  // Maximum size of echo datagram
 

@@ -1,7 +1,8 @@
 import java.net.*;  // for Socket
 import java.io.*;   // for IOException and Input/OutputStream
+import java.util.Scanner;
 
-public class TCPEchoClient {
+public class myFirstTCPClient {
 
   public static void main(String[] args) throws IOException {
 
@@ -9,10 +10,16 @@ public class TCPEchoClient {
       throw new IllegalArgumentException("Parameter(s): <Server> <Word> [<Port>]");
 
     String server = args[0];       // Server name or IP address
-    // Convert input String to bytes using the default character encoding
-    byte[] byteBuffer = args[1].getBytes();
 
-    int servPort = (args.length == 3) ? Integer.parseInt(args[2]) : 7;
+    int servPort = Integer.parseInt(args[1]);
+
+    System.out.print("Enter a sentence to send to the server: ");
+
+    Scanner scnr = new Scanner(System.in); 
+    String user_sentence = scnr.nextLine(); 
+
+    // Convert input String to bytes using the default character encoding
+    byte[] byteBuffer = user_sentence.getBytes(); 
 
     // Create socket that is connected to server on specified port
     Socket socket = new Socket(server, servPort);
@@ -21,6 +28,8 @@ public class TCPEchoClient {
     InputStream in = socket.getInputStream();
     OutputStream out = socket.getOutputStream();
 
+    // Start timer 
+    long startTime = System.nanoTime(); 
     out.write(byteBuffer);  // Send the encoded string to the server
 
     // Receive the same string back from the server
@@ -34,6 +43,10 @@ public class TCPEchoClient {
     }
 
     System.out.println("Received: " + new String(byteBuffer));
+
+    // end timer 
+    long endTime = System.nanoTime(); 
+    System.out.println("The response took " + Long.toString(endTime - startTime) + " Nanoseconds"); 
 
     socket.close();  // Close the socket and its streams
   }

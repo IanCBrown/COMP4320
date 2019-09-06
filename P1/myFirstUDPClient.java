@@ -1,7 +1,7 @@
 import java.net.*;  // for DatagramSocket, DatagramPacket, and InetAddress
 import java.io.*;   // for IOException
 
-public class UDPEchoClientTimeout {
+public class myFirstUDPClient {
 
   private static final int TIMEOUT = 3000;   // Resend timeout (milliseconds)
   private static final int MAXTRIES = 5;     // Maximum retransmissions

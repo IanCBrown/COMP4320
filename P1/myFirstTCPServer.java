@@ -1,7 +1,7 @@
 import java.net.*;  // for Socket, ServerSocket, and InetAddress
 import java.io.*;   // for IOException and Input/OutputStream
 
-public class TCPEchoServer {
+public class myFirstTCPServer {
 
   private static final int BUFSIZE = 32;   // Size of receive buffer
 
@@ -28,12 +28,28 @@ public class TCPEchoServer {
       InputStream in = clntSock.getInputStream();
       OutputStream out = clntSock.getOutputStream();
 
+      
+
       // Receive until client closes connection, indicated by -1 return
       while ((recvMsgSize = in.read(byteBuffer)) != -1)
         out.write(byteBuffer, 0, recvMsgSize);
+        System.out.println(reverse(new String(byteBuffer))); 
 
       clntSock.close();  // Close the socket.  We are done with this client!
     }
     /* NOT REACHED */
+  }
+
+  public static String reverse(String inputString) {
+    int j = inputString.length() - 1; 
+    char[] work = inputString.toCharArray(); 
+    char temp; 
+    for (int i = 0; i < inputString.length() / 2; i++, j--)
+    {
+      temp = work[i];
+      work[i] = work[j]; 
+      work[j] = temp; 
+    }
+    return new String(work); 
   }
 }
