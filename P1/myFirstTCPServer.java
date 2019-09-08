@@ -43,17 +43,4 @@ public class myFirstTCPServer {
     }
     /* NOT REACHED */
   }
-
-  public static String reverse(String inputString) {
-    int j = inputString.length() - 1; 
-    char[] work = inputString.toCharArray(); 
-    char temp; 
-    for (int i = 0; i < inputString.length() / 2; i++, j--)
-    {
-      temp = work[i];
-      work[i] = work[j]; 
-      work[j] = temp; 
-    }
-    return new String(work); 
-  }
 }

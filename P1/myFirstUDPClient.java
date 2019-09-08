@@ -1,54 +1,72 @@
-import java.net.*;  // for DatagramSocket, DatagramPacket, and InetAddress
-import java.io.*;   // for IOException
+import java.net.*; // for DatagramSocket, DatagramPacket, and InetAddress
+import java.io.*; // for IOException
+import java.util.Scanner;
 
 public class myFirstUDPClient {
 
-  private static final int TIMEOUT = 3000;   // Resend timeout (milliseconds)
-  private static final int MAXTRIES = 5;     // Maximum retransmissions
+  private static final int TIMEOUT = 3000; // Resend timeout (milliseconds)
+  private static final int MAXTRIES = 5; // Maximum retransmissions
 
   public static void main(String[] args) throws IOException {
 
-    if ((args.length < 2) || (args.length > 3))  // Test for correct # of args
-      throw new IllegalArgumentException("Parameter(s): <Server> <Word> [<Port>]");
+    if ((args.length < 2) || (args.length > 3)) // Test for correct # of args
+      throw new IllegalArgumentException("Parameter(s): <Server> [<Port>]");
 
-    InetAddress serverAddress = InetAddress.getByName(args[0]);  // Server address
-    // Convert input String to bytes using the default character encoding
-    byte[] bytesToSend = args[1].getBytes();
+    InetAddress serverAddress = InetAddress.getByName(args[0]); // Server address
 
-    int servPort = (args.length == 3) ? Integer.parseInt(args[2]) : 7;
+    String userSentence = "";
 
-    DatagramSocket socket = new DatagramSocket();
+    while (true) {
+      System.out.println("Use ctrl + c to exit the application"); 
+      System.out.print("Enter a sentence to send to the server: "); 
 
-    socket.setSoTimeout(TIMEOUT);  // Maximum receive blocking time (milliseconds)
+      Scanner scnr = new Scanner(System.in); 
+      userSentence = scnr.nextLine(); 
 
-    DatagramPacket sendPacket = new DatagramPacket(bytesToSend,  // Sending packet
-        bytesToSend.length, serverAddress, servPort);
+      // Convert input String to bytes using the default character encoding
+      byte[] bytesToSend = userSentence.getBytes();
 
-    DatagramPacket receivePacket =                              // Receiving packet
-        new DatagramPacket(new byte[bytesToSend.length], bytesToSend.length);
+      int servPort = (args.length == 2) ? Integer.parseInt(args[1]) : 7;
 
-    int tries = 0;      // Packets may be lost, so we have to keep trying
-    boolean receivedResponse = false;
-    do {
-      socket.send(sendPacket);          // Send the echo string
-      try {
-        socket.receive(receivePacket);  // Attempt echo reply reception
+      DatagramSocket socket = new DatagramSocket();
 
-        if (!receivePacket.getAddress().equals(serverAddress))  // Check source
-          throw new IOException("Received packet from an unknown source");
+      socket.setSoTimeout(TIMEOUT); // Maximum receive blocking time (milliseconds)
 
-        receivedResponse = true;
-      } catch (InterruptedIOException e) {  // We did not get anything
-        tries += 1;
-        System.out.println("Timed out, " + (MAXTRIES-tries) + " more tries...");
+      DatagramPacket sendPacket = new DatagramPacket(bytesToSend, // Sending packet
+          bytesToSend.length, serverAddress, servPort);
+
+      DatagramPacket receivePacket = // Receiving packet
+          new DatagramPacket(new byte[bytesToSend.length], bytesToSend.length);
+
+      long startTime = System.nanoTime(); 
+      int tries = 0; // Packets may be lost, so we have to keep trying
+      boolean receivedResponse = false;
+      do {
+        socket.send(sendPacket); // Send the echo string
+        try {
+          socket.receive(receivePacket); // Attempt echo reply reception
+
+          if (!receivePacket.getAddress().equals(serverAddress)) // Check source
+            throw new IOException("Received packet from an unknown source");
+
+          receivedResponse = true;
+        } catch (InterruptedIOException e) { // We did not get anything
+          tries += 1;
+          System.out.println("Timed out, " + (MAXTRIES - tries) + " more tries...");
+        }
+      } while ((!receivedResponse) && (tries < MAXTRIES));
+
+      long endTime = System.nanoTime(); 
+
+      if (receivedResponse) {
+        System.out.println("Received: " + new String(receivePacket.getData()));
+        System.out.println("The response took " + Long.toString(endTime - startTime) + " Nanoseconds");
       }
-    } while ((!receivedResponse) && (tries < MAXTRIES));
-
-    if (receivedResponse)
-      System.out.println("Received: " + new String(receivePacket.getData()));
-    else
-      System.out.println("No response -- giving up.");
-
-    socket.close();
+      else {
+        System.out.println("No response -- giving up.");
+      }
+        
+      socket.close();
+    }
   }
 }

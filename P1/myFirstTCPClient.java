@@ -7,7 +7,7 @@ public class myFirstTCPClient {
   public static void main(String[] args) throws IOException {
 
     if ((args.length < 2) || (args.length > 3))  // Test for correct # of args
-      throw new IllegalArgumentException("Parameter(s): <Server> <Word> [<Port>]");
+      throw new IllegalArgumentException("Parameter(s): <Server> [<Port>]");
 
     String server = args[0];       // Server name or IP address
 
@@ -15,8 +15,7 @@ public class myFirstTCPClient {
 
     String userSentence = ""; 
 
-    while (true)
-    { 
+    while (true) { 
       System.out.println("Use ctrl + c to exit the application"); 
       System.out.print("Enter a sentence to send to the server: ");
 
