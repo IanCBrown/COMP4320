@@ -14,9 +14,8 @@ public class myFirstTCPClient {
     int servPort = Integer.parseInt(args[1]);
 
     String userSentence = ""; 
-
+    System.out.println("Use ctrl + c to exit the application"); 
     while (true) { 
-      System.out.println("Use ctrl + c to exit the application"); 
       System.out.print("Enter a sentence to send to the server: ");
 
       Scanner scnr = new Scanner(System.in); 
