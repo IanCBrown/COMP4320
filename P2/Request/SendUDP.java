@@ -85,7 +85,9 @@ public class SendUDP {
         if (sin.nextInt() == 1){
 			quit = 1;
 		}
-      }
+      
         sock.close();
-  
+  }
 }
+}
+

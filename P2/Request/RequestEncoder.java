@@ -1,4 +1,4 @@
-public interface RequestEnconder {
+public interface RequestEncoder {
     byte[] encode(Request req) throws Exception;
   }
   
