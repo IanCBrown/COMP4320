@@ -5,7 +5,7 @@ public class RequestDecoderBin implements RequestDecoder, RequestBinConst {
 
   private String encoding;  // Character encoding
 
-  public RequestEncoderBin() {
+  public RequestDecoderBin() {
     encoding = DEFAULT_ENCODING;
   }
 
@@ -14,25 +14,20 @@ public class RequestDecoderBin implements RequestDecoder, RequestBinConst {
   }
 
   public Request decode(InputStream wire) throws IOException {
-      boolean single, rich, female;
     DataInputStream src = new DataInputStream(wire);
-    long  ID            = src.readLong();
-    short streetnumber  = src.readShort();
-    int   zipcode       = src.readInt();
-    byte  flags         = src.readByte();  
-    
-    //Deal with the lastname
-    int stringLength = src.read(); // Returns an unsigned byte as an int
-    if (stringLength == -1)
-      throw new EOFException();
-    byte[] stringBuf = new byte[stringLength];
-    src.readFully(stringBuf);
-    String lastname = new String(stringBuf, encoding);
-
-    return new Request(ID,lastname, streetnumber, zipcode,
-      ((flags & SINGLE_FLAG) == SINGLE_FLAG),
-		      ((flags & RICH_FLAG) == RICH_FLAG),
-		      ((flags & FEMALE_FLAG) == FEMALE_FLAG));
+    int tml             = src.readInt();
+    int request_id      = src.readInt();
+    int op_code         = src.readInt();
+    int num_of_operands = src.readInt(); 
+    int operand_1       = src.readInt();
+    int[] operands;
+    operands[0] = operand_1;
+    if (num_of_operands == 2){
+        int operand_2 = src.readInt();
+        operands[1] = operand_2;
+    }
+   
+    return new Request(tml, request_id, op_code, num_of_operands, operands);
   }
 
   public Request decode(DatagramPacket p) throws IOException {

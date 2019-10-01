@@ -16,15 +16,17 @@ public class RecvUDP {
       
       // Receive binary-encoded friend                              
       // FriendDecoder decoder = new FriendDecoderBin();
-      FriendDecoder decoder = (args.length == 2 ?   // Which encoding              
-				  new FriendDecoderBin(args[1]) :
-				  new FriendDecoderBin() );
+      RequestDecoder decoder = (args.length == 2 ?   // Which encoding              
+				  new RequestDecoderBin(args[1]) :
+				  new RequestDecoderBin() );
 
 
-      Friend receivedFriend = decoder.decode(packet);
+      Request receivedRequest = decoder.decode(packet);
 
-      System.out.println("Received Binary-Encoded Friend");
-      System.out.println(receivedFriend);
+      System.out.println("Received Binary-Encoded Request");
+      System.out.println(receivedRequest);
+      
+      
       
       sock.close();
   }
