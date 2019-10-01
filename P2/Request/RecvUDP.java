@@ -9,6 +9,7 @@ public class RecvUDP {
 	  throw new IllegalArgumentException("Parameter(s): <Port> [<encoding>]");
       
       int port = Integer.parseInt(args[0]);   // Receiving Port
+	  //need to change this to our group number 
       
       DatagramSocket sock = new DatagramSocket(port);  // UDP socket for receiving      
       DatagramPacket packet = new DatagramPacket(new byte[1024],1024);
