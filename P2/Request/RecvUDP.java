@@ -10,7 +10,8 @@ public class RecvUDP {
 		if (args.length != 1 && args.length != 2) // Test for correct # of args
 			throw new IllegalArgumentException("Parameter(s): <Port> [<encoding>]");
 
-		int port = 10012; // Receiving Port
+		
+		int port = Integer.parseInt(args[0]); // Receiving Port
 		// changed this to our group number
 
 		DatagramSocket sock = new DatagramSocket(port); // UDP socket for receiving
