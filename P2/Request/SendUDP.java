@@ -24,6 +24,7 @@ public class SendUDP {
       RequestEncoder encoder = (args.length == 3 ?
                                     new RequestEncoderBin(args[2]) :
                                     new RequestEncoderBin());
+	  DatagramPacket packet = new DatagramPacket(new byte[1024],1024);
       int count = 1;
       while(quit == 0){
         // Use the encoding scheme given on the command line (args[2])
@@ -68,8 +69,22 @@ public class SendUDP {
                                                     destAddr, destPort);
         sock.send(message);
         
+		sock.receive(packet);
+		ByteArrayInputStream payload =
+		new ByteArrayInputStream(p.getData(), p.getOffset(), p.getLength());
+		DataInputStream src = new DataInputStream(payload);
+		int tml             = src.readInt();
+		int request_id		= src.readInt();
+		int answer	        = src.readInt();
+		System.out.println("Request ID: " + request_id);
+		System.out.println("Answer: " + answer);
+
+		
+
         System.out.println("Press 0 to continue and 1 to quit: ");
-        
+        if (sin.nextInt() == 1){
+			quit = 1;
+		}
       }
         sock.close();
   
