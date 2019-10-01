@@ -48,13 +48,13 @@ public class SendUDP {
             oper_2 = sin.nextInt();
             operands[0] = oper_1;
             operands[1] = oper_2;
-            Request req = new Request(8,count++,op_in,operands);
+            Request req = new Request(8,count++,op_in,2,operands);
         }
         if (op_in == 7){
             int oper_1;
             System.out.print("Enter operand: ");
             oper_1 = sin.nextInt();
-            Request req = new Request(6,count++,op_in,operands);
+            Request req = new Request(6,count++,op_in,1,operands);
         }
         else{
             throw new IOException();
