@@ -13,12 +13,15 @@ public class SendUDP {
         InetAddress destAddr = InetAddress.getByName(args[0]); // Destination address
         int destPort = Integer.parseInt(args[1]); // Destination port
 
+        long start = System.currentTimeMillis(); 
+
         DatagramSocket sock = new DatagramSocket(); // UDP socket for sending
         int quit = 0;
         Scanner sin = new Scanner(System.in);
         RequestEncoder encoder = (args.length == 3 ? new RequestEncoderBin(args[2]) : new RequestEncoderBin());
         DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
         byte count = 1;
+
         while (quit == 0) {
             // Use the encoding scheme given on the command line (args[2])
 
@@ -78,6 +81,9 @@ public class SendUDP {
             int answer = src.readInt();
             System.out.println("Request ID: " + request_id);
             System.out.println("Answer: " + answer);
+
+            long end = System.currentTimeMillis(); 
+            System.out.println("The request took " + Long.toString(end - start) + " milliseconds.");
 
             System.out.println("Press 0 to continue and 1 to quit: ");
             if (sin.nextInt() == 1) {
