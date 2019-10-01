@@ -15,15 +15,15 @@ public class RequestDecoderBin implements RequestDecoder, RequestBinConst {
 
   public Request decode(InputStream wire) throws IOException {
     DataInputStream src = new DataInputStream(wire);
-    int tml             = src.readInt();
-    int request_id      = src.readInt();
-    int op_code         = src.readInt();
-    int num_of_operands = src.readInt(); 
-    int operand_1       = src.readInt();
-    int[] operands;
+    byte tml             = src.readByte();
+    byte request_id      = src.readByte();
+    byte op_code         = src.readByte();
+    byte num_of_operands = src.readByte(); 
+    short operand_1       = src.readShort();
+    short[] operands = new short[255];
     operands[0] = operand_1;
     if (num_of_operands == 2){
-        int operand_2 = src.readInt();
+        short operand_2 = src.readShort();
         operands[1] = operand_2;
     }
    

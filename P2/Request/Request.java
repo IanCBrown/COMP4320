@@ -2,16 +2,16 @@ import java.util.Arrays;
 
 public class Request {
 
-   public int tml; 
-   public int request_id; 
-   public int op_code; 
-   public int num_of_operands; 
-   public int operand_1;
-   public int operand_2;
-   public int[] operands;
+   public byte tml; 
+   public byte request_id; 
+   public byte op_code; 
+   public byte num_of_operands; 
+   public short operand_1;
+   public short operand_2;
+   public short[] operands;
     
 
-  public Request(int tml, int request_id, int op_code, int num_of_operands, int[] operands)  {
+  public Request(byte tml, byte request_id, byte op_code, byte num_of_operands, short[] operands)  {
       this.tml = tml; 
       this.request_id = request_id; 
       this.op_code = op_code;
@@ -24,10 +24,10 @@ public class Request {
 
   public String toString() {
     StringBuilder retValue = new StringBuilder();
-    retValue.append(Integer.toString(tml));
-    retValue.append(Integer.toString(request_id));
-    retValue.append(Integer.toString(op_code));
-    retValue.append(Integer.toString(num_of_operands));
+    retValue.append(Byte.toString(tml));
+    retValue.append(Byte.toString(request_id));
+    retValue.append(Byte.toString(op_code));
+    retValue.append(Byte.toString(num_of_operands));
     retValue.append(Arrays.toString(operands));
     return retValue.toString(); 
   }
