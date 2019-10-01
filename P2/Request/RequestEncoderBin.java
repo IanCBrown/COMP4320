@@ -16,13 +16,13 @@ public class RequestEncoderBin implements RequestEncoder, RequestBinConst {
 
     ByteArrayOutputStream buf = new ByteArrayOutputStream();
     DataOutputStream out = new DataOutputStream(buf);
-    out.writeInt(req.tml);
-    out.writeInt(req.request_id);
-    out.writeInt(req.op_code);
-    out.writeInt(req.num_of_operands);
-    out.writeInt(req.operand_1);
+    out.writeByte(req.tml);
+    out.writeByte(req.request_id);
+    out.writeByte(req.op_code);
+    out.writeByte(req.num_of_operands);
+    out.writeShort(req.operand_1);
     if (req.num_of_operands == 2){
-        out.writeInt(req.operand_2);
+        out.writeShort(req.operand_2);
     }
 
     out.flush();

@@ -48,6 +48,7 @@ public class SendUDP {
                 short oper_1;
                 System.out.print("Enter operand: ");
                 oper_1 = sin.nextShort();
+                operands[0] = oper_1;
                 tml = 6; 
                 num_operands = 1; 
                 req = new Request(tml, count++, op_in, num_operands, operands);
@@ -81,9 +82,8 @@ public class SendUDP {
             System.out.println("Press 0 to continue and 1 to quit: ");
             if (sin.nextInt() == 1) {
                 quit = 1;
-            }
-
-            sock.close();
+            }  
         }
+        sock.close();
     }
 }

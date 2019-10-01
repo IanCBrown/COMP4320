@@ -1,4 +1,6 @@
 import java.net.*; // for DatagramSocket and DatagramPacket
+import java.util.Arrays;
+
 import java.io.*; // for IOException
 
 public class RecvUDP {
@@ -15,40 +17,47 @@ public class RecvUDP {
 		DatagramPacket packet = new DatagramPacket(new byte[1024], 1024);
 		while (true) {
 			sock.receive(packet);
-
+			int len = packet.getLength();
+			byte tml = 7;
+			byte err = 0;
+			byte[] reply;
+			int answer = 0;
+			
 			// Receive binary-encoded friend
 			// FriendDecoder decoder = new FriendDecoderBin();
 			RequestDecoder decoder = (args.length == 2 ? // Which encoding
 					new RequestDecoderBin(args[1]) : new RequestDecoderBin());
 
-			int answer = 0;
 			Request receivedRequest = decoder.decode(packet);
-			if (receivedRequest.op_code == 1) {
-				answer = receivedRequest.operand_1 + receivedRequest.operand_2;
+			System.out.println(len);
+			if (receivedRequest.tml == len) {				
+				if (receivedRequest.op_code == 1) {
+					answer = receivedRequest.operand_1 + receivedRequest.operand_2;
+				}
+				if (receivedRequest.op_code == 2) {
+					answer = receivedRequest.operand_1 - receivedRequest.operand_2;
+				}
+				if (receivedRequest.op_code == 3) {
+					answer = receivedRequest.operand_1 * receivedRequest.operand_2;
+				}
+				if (receivedRequest.op_code == 4) {
+					answer = receivedRequest.operand_1 / receivedRequest.operand_2;
+				}
+				if (receivedRequest.op_code == 5) {
+					answer = receivedRequest.operand_1 >> receivedRequest.operand_2;
+				}
+				if (receivedRequest.op_code == 6) {
+					answer = receivedRequest.operand_1 << receivedRequest.operand_2;
+				}
+				if (receivedRequest.op_code == 7) {
+					answer = ~receivedRequest.operand_1;
+				}
+			} else {
+				err = 127; 
 			}
-			if (receivedRequest.op_code == 2) {
-				answer = receivedRequest.operand_1 - receivedRequest.operand_2;
-			}
-			if (receivedRequest.op_code == 3) {
-				answer = receivedRequest.operand_1 * receivedRequest.operand_2;
-			}
-			if (receivedRequest.op_code == 4) {
-				answer = receivedRequest.operand_1 / receivedRequest.operand_2;
-			}
-			if (receivedRequest.op_code == 5) {
-				answer = receivedRequest.operand_1 >> receivedRequest.operand_2;
-			}
-			if (receivedRequest.op_code == 6) {
-				answer = receivedRequest.operand_1 << receivedRequest.operand_2;
-			}
-			if (receivedRequest.op_code == 7) {
-				answer = ~receivedRequest.operand_1;
-			}
-			// create exit packet
-			byte tml = 7;
+			
 			byte request_id = receivedRequest.request_id;
-			byte err = 0;
-			byte[] reply;
+			// create exit packet
 			ByteArrayOutputStream buf = new ByteArrayOutputStream();
 			DataOutputStream out = new DataOutputStream(buf);
 			out.writeByte(tml);
@@ -61,8 +70,7 @@ public class RecvUDP {
 			sock.send(next_answer);
 
 			System.out.println("Received Binary-Encoded Request");
-			System.out.println(receivedRequest);
-
+			System.out.println(Arrays.toString(reply));
 		}
 	}
 }
