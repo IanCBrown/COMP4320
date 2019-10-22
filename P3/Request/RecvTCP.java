@@ -5,20 +5,63 @@ public class RecvTCP {
 
   public static void main(String args[]) throws Exception {
 
-    if (args.length != 1)  // Test for correct # of args
-      throw new IllegalArgumentException("Parameter(s): <Port>");
+    if (args.length != 1 && args.length != 2)  // Test for correct # of args
+      throw new IllegalArgumentException("Parameter(s): <Port> [<encoding>]");
 
     int port = Integer.parseInt(args[0]);   // Receiving Port
 	
     ServerSocket servSock = new ServerSocket(port);
     Socket clntSock = servSock.accept();
-
-    // Receive binary-encoded friend
-    FriendDecoder decoder = new FriendDecoderBin();
-    Friend receivedFriend = decoder.decode(clntSock.getInputStream());
-
-    System.out.println("Received Binary-Encoded Friend");
-    System.out.println(receivedFriend);
+	while (1){
+		// Receive binary-encoded request
+		RequestDecoder decoder = (args.length == 2 ? // Which encoding
+						new RequestDecoderBin(args[1]) : new RequestDecoderBin());
+		Request receivedRequest = decoder.decode(clntSock.getInputStream());
+		byte tml = 7;
+		byte err = 0;
+		byte[] reply;
+		int answer = 0;
+		System.out.println("Received Binary-Encoded Request");
+		System.out.println(len);
+		if (receivedRequest.tml == len) {				
+			if (receivedRequest.op_code == 1) {
+				answer = receivedRequest.operand_1 + receivedRequest.operand_2;
+			}
+			if (receivedRequest.op_code == 2) {
+				answer = receivedRequest.operand_1 - receivedRequest.operand_2;
+			}
+			if (receivedRequest.op_code == 3) {
+				answer = receivedRequest.operand_1 * receivedRequest.operand_2;
+			}
+			if (receivedRequest.op_code == 4) {
+				answer = receivedRequest.operand_1 / receivedRequest.operand_2;
+			}
+			if (receivedRequest.op_code == 5) {
+				answer = receivedRequest.operand_1 >> receivedRequest.operand_2;
+			}
+			if (receivedRequest.op_code == 6) {
+				answer = receivedRequest.operand_1 << receivedRequest.operand_2;
+			}
+			if (receivedRequest.op_code == 7) {
+				answer = ~receivedRequest.operand_1;
+			}
+		} else {
+			err = 127; 
+		}
+		
+		byte request_id = receivedRequest.request_id;
+		// create exit packet
+		ByteArrayOutputStream buf = new ByteArrayOutputStream();
+		DataOutputStream out = new DataOutputStream(buf);
+		out.writeByte(tml);
+		out.writeByte(request_id);
+		out.writeByte(err);
+		out.writeInt(answer);
+		out.flush();
+		reply = buf.toByteArray();
+		OutputStream out = clntSock.getOutputStream(); // Get a handle onto Output Stream
+		out.write(reply); // send
+	}
 
     clntSock.close();
     servSock.close();
