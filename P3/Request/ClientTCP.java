@@ -3,7 +3,7 @@ import java.net.*; // for Socket
 import java.util.*; 
 
 // client
-public class SendTCP {
+public class ClientTCP {
     public static void main(String args[]) throws Exception {
 
         if (args.length != 2) // Test for correct # of args
@@ -20,8 +20,6 @@ public class SendTCP {
         byte count = 1;
 
         long start = System.currentTimeMillis();
-        
-
        
 
         // Business logic
@@ -66,14 +64,13 @@ public class SendTCP {
             try {
                 byte[] codedRequest = encoder.encode(req); // Encode friend
                 // debugging purposes
-                System.out.println(Arrays.toString(codedRequest));
+                System.out.println(bytesToHex(codedRequest));
 
                 OutputStream out = sock.getOutputStream();
                 out.write(encoder.encode(req));
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
 
             DataInputStream in = new DataInputStream(sock.getInputStream()); 
             long end = System.currentTimeMillis();
@@ -93,5 +90,22 @@ public class SendTCP {
             } 
         }
         sock.close();
+    }
+
+
+        // https://www.mkyong.com/java/java-how-to-convert-bytes-to-hex/
+        // helper function 
+        private static String bytesToHex(byte[] bytes) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("["); 
+        for (int i = 0; i < bytes.length; i++) {
+            sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            if (i == bytes.length - 1) {
+                break; 
+            }
+            sb.append(", ");
+        }
+        sb.append("]"); 
+        return sb.toString();
     }
 }

@@ -1,7 +1,7 @@
 import java.io.*;   // for Input/OutputStream
 import java.net.*;  // for Socket and ServerSocket
 
-public class RecvTCP {
+public class ServerTCP {
 
   public static void main(String args[]) throws Exception {
 
@@ -12,7 +12,7 @@ public class RecvTCP {
 	
     ServerSocket servSock = new ServerSocket(port);
     Socket clntSock = servSock.accept();
-	while (1){
+	while (true){
 		// Receive binary-encoded request
 		RequestDecoder decoder = (args.length == 2 ? // Which encoding
 						new RequestDecoderBin(args[1]) : new RequestDecoderBin());
@@ -22,8 +22,9 @@ public class RecvTCP {
 		byte[] reply;
 		int answer = 0;
 		System.out.println("Received Binary-Encoded Request");
-		System.out.println(len);
-		if (receivedRequest.tml == len) {				
+		// 6 min length
+		// 7 max length 
+		if (receivedRequest.tml >= 7 || receivedRequest.tml <= 8) {				
 			if (receivedRequest.op_code == 1) {
 				answer = receivedRequest.operand_1 + receivedRequest.operand_2;
 			}
@@ -59,11 +60,8 @@ public class RecvTCP {
 		out.writeInt(answer);
 		out.flush();
 		reply = buf.toByteArray();
-		OutputStream out = clntSock.getOutputStream(); // Get a handle onto Output Stream
-		out.write(reply); // send
+		OutputStream out_reply = clntSock.getOutputStream(); // Get a handle onto Output Stream
+		out_reply.write(reply); // send
 	}
-
-    clntSock.close();
-    servSock.close();
   }
 }
