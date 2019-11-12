@@ -1,4 +1,5 @@
 import socket
+import time
 
 UDP_IP = "127.0.0.1"
 UDP_PORT = 10012
@@ -44,6 +45,8 @@ while quit == 0:
         print("INVALID INPUT")
         continue
 
+    # start timer
+    start = time.time()
     sock = socket.socket(socket.AF_INET, # Internet
                         socket.SOCK_DGRAM) # UDP
     transport = bytearray([req.length, req.request_id, req.op_code, req.num_of_operands, 0,req.operand_1, 0,req.operand_2])
@@ -61,6 +64,9 @@ while quit == 0:
 
     print("Request ID: ", req_id)
     print("Answer: ", answer)
+    # stop timer
+    end = time.time()
+    print("The request took {} seconds".format(end - start))
 
     
     print("Press 0 to continue and 1 to quit: ")
