@@ -46,8 +46,22 @@ while quit == 0:
 
     sock = socket.socket(socket.AF_INET, # Internet
                         socket.SOCK_DGRAM) # UDP
-    transport = bytearray([req.length, req.request_id, req.op_code, req.num_of_operands, req.operand_1, req.operand_2])
+    transport = bytearray([req.length, req.request_id, req.op_code, req.num_of_operands, 0,req.operand_1, 0,req.operand_2])
+    print(list(map(hex, list(transport))))
     sock.sendto(transport, (UDP_IP, UDP_PORT))
+    
+ 
+    response = sock.recv(1024)
+    response = list(response)
+    new_len = response[0]
+    req_id = response[1]
+    err = response[2]
+    int_ans = response[3:]
+    answer = int("".join([str(x) for x in int_ans]))
 
+    print("Request ID: ", req_id)
+    print("Answer: ", answer)
+
+    
     print("Press 0 to continue and 1 to quit: ")
     quit = int(input())
