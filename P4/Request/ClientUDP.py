@@ -1,6 +1,7 @@
 import socket
 import time
 import sys
+import struct
 
 if sys.argv[1] == "" or sys.argv[1] == "localhost":
     UDP_IP = "127.0.0.1"
@@ -23,6 +24,14 @@ class Request:
         self.num_of_operands = number_of_operands 
         self.operand_1 = operand_1
         self.operand_2 = operand_2
+
+class Stream: 
+    def __init__(self, base_stream):
+        self.base_stream = base_stream
+    def readByte(self):
+        return struct.unpack_from('b',1)
+    def readInt32(self):
+        return self.base_stream.struct.unpack('i', 4)
 
 while quit == 0:
     print("Enter the operation you\'d like to perform")
@@ -63,20 +72,20 @@ while quit == 0:
     
     response = sock.recv(1024)
     response = list(response)
+    
+    # response = Stream(sock.recv(1024))
     # print(list(map(hex, response)))
-    # print(response)
     new_len = response[0]
     req_id = response[1]
     err = response[2]
     int_ans = response[3:]
-    answer = int("".join([str(x) for x in int_ans]))
+    int_ans = int.from_bytes(int_ans, byteorder="big", signed="True")
 
     print("Request ID: ", req_id)
-    print("Answer: ", answer)
+    print("Answer: ", int_ans)
     # stop timer
     end = time.time()
     print("The request took {} seconds".format(end - start))
 
-    
     print("Press 0 to continue and 1 to quit: ")
     quit = int(input())
