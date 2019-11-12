@@ -1,8 +1,16 @@
 import socket
 import time
+import sys
 
-UDP_IP = "127.0.0.1"
-UDP_PORT = 10012
+if sys.argv[1] == "" or sys.argv[1] == "localhost":
+    UDP_IP = "127.0.0.1"
+else:
+    UDP_IP = sys.argv[1]
+if sys.argv[2] == "":
+    UDP_PORT = 10012
+else:
+    UDP_PORT = int(sys.argv[2])
+    
 
 quit = 0 
 count = 0
@@ -53,9 +61,10 @@ while quit == 0:
     print(list(map(hex, list(transport))))
     sock.sendto(transport, (UDP_IP, UDP_PORT))
     
- 
     response = sock.recv(1024)
     response = list(response)
+    # print(list(map(hex, response)))
+    # print(response)
     new_len = response[0]
     req_id = response[1]
     err = response[2]
