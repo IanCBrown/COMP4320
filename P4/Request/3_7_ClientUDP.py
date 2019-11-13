@@ -65,14 +65,13 @@ while quit == 0:
     response = list(response)
     
     new_len = response[0]
-    req_id = struct.unpack("b", response[1])[0]
+    req_id = response[1]
     err = response[2]
-    ans = response[3:]
-    ans = b''.join(ans)
-    ans = struct.unpack(">i", ans)[0]
+    int_ans = response[3:]
+    int_ans = int.from_bytes(int_ans, byteorder="big", signed="True")
 
-    print("Request ID: " + str(req_id))
-    print("Answer: " + str(ans))
+    print("Request ID: ", req_id)
+    print("Answer: ", int_ans)
     # stop timer
     end = time.time()
     print("The request took {} seconds".format(end - start))
