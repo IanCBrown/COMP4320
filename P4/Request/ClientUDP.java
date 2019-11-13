@@ -75,6 +75,7 @@ public class ClientUDP {
             ByteArrayInputStream payload = new ByteArrayInputStream(packet.getData(), packet.getOffset(),
                     packet.getLength());
             DataInputStream src = new DataInputStream(payload);
+            // System.out.println(Arrays.toString(packet.getData())); 
             byte new_tml = src.readByte();
             byte request_id = src.readByte();
             byte err = src.readByte(); 

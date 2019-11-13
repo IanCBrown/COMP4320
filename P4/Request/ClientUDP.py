@@ -12,7 +12,6 @@ if sys.argv[2] == "":
 else:
     UDP_PORT = int(sys.argv[2])
     
-
 quit = 0 
 count = 0
 
@@ -24,14 +23,6 @@ class Request:
         self.num_of_operands = number_of_operands 
         self.operand_1 = operand_1
         self.operand_2 = operand_2
-
-class Stream: 
-    def __init__(self, base_stream):
-        self.base_stream = base_stream
-    def readByte(self):
-        return struct.unpack_from('b',1)
-    def readInt32(self):
-        return self.base_stream.struct.unpack('i', 4)
 
 while quit == 0:
     print("Enter the operation you\'d like to perform")
@@ -48,16 +39,16 @@ while quit == 0:
     if op_code < 7:
         oper_1 = int(input("Enter first operand: "))
         oper_2 = int(input("Enter second operand: "))
-        tml = 8
+        new_len = 8
         num_operands = 2
         count += 1
-        req = Request(tml, count, op_code, num_operands, oper_1, oper_2)
+        req = Request(new_len, count, op_code, num_operands, oper_1, oper_2)
     elif op_code == 7:
         oper_1 = int(input("Enter operand: "))
-        tml = 6
+        new_len = 6
         num_operands = 1
         count += 1
-        req = Request(tml, count, op_code, num_operands, oper_1)
+        req = Request(new_len, count, op_code, num_operands, oper_1)
     else:
         print("INVALID INPUT")
         continue
@@ -73,8 +64,6 @@ while quit == 0:
     response = sock.recv(1024)
     response = list(response)
     
-    # response = Stream(sock.recv(1024))
-    # print(list(map(hex, response)))
     new_len = response[0]
     req_id = response[1]
     err = response[2]
