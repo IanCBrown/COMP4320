@@ -34,41 +34,41 @@ while True:
         print("client connected: ", client_address)
         while True:
             data = connection.recv(1024)
-            data = list(data)
-    
-            new_len = data[0]
-            req_id = struct.unpack("b", data[1])[0]
-            op_code = data[2]
-
-            op_num = data[3]
-            arg_1 = data[4:6]
-            arg_1 = struct.unpack("b", arg_1)[0]
-            if (op_num == 2):
-                arg_2 = data[6:]
-                arg_2 = struct.unpack("b", arg_2)[0]
-            ans = 0
-            # do math here
-            if op_code == 0:
-                ans = arg_1 + arg_2
-            if op_code == 1:
-                ans = arg_1 - arg_2
-            if op_code == 2:
-                ans = arg_1 * arg_2
-            if op_code == 3:
-                ans = arg_1 / arg_2
-            if op_code == 4:
-                ans = arg_1 >> arg_2
-            if op_code == 5:
-                ans = arg_1 << arg_2
-            if op_code == 6:
-                ans = ~ arg_1
-            # encode response here
-
-            # send response here
-
             if data:
                 connection.sendall(data)
                 print(data)
+                data = list(data)
+
+                new_len = data[0]
+                req_id = struct.unpack("b", data[1])[0]
+                op_code = data[2]
+
+                op_num = data[3]
+                arg_1 = data[4:6]
+                arg_1 = struct.unpack(">i", arg_1)[0]
+                if (op_num == 2):
+                    arg_2 = data[6:]
+                    arg_2 = struct.unpack(">i", arg_2)[0]
+                ans = 0
+                # do math here
+                if op_code == 0:
+                    ans = arg_1 + arg_2
+                if op_code == 1:
+                    ans = arg_1 - arg_2
+                if op_code == 2:
+                    ans = arg_1 * arg_2
+                if op_code == 3:
+                    ans = arg_1 / arg_2
+                if op_code == 4:
+                    ans = arg_1 >> arg_2
+                if op_code == 5:
+                    ans = arg_1 << arg_2
+                if op_code == 6:
+                    ans = ~ arg_1
+                # encode response here
+
+                # send response here
+
     
     finally:
         connection.close()
