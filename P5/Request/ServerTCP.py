@@ -41,11 +41,11 @@ while True:
             op_code = data[2]
 
             op_num = data[3]
-            arg_1 = data[4:5]
-            arg_1 = int.from_bytes(arg_1, byteorder="big", signed="True")
+            arg_1 = data[4:6]
+            arg_1 = struct.unpack("b", arg_1)[0]
             if (op_num == 2):
-                arg_2 = data[5:]
-                arg_2 = int.from_bytes(arg_2, byteorder="big", signed="True")
+                arg_2 = data[6:]
+                arg_2 = struct.unpack("b", arg_2)[0]
             ans = 0
             # do math here
             if op_code == 0:
@@ -61,7 +61,7 @@ while True:
             if op_code == 5:
                 ans = arg_1 << arg_2
             if op_code == 6:
-                ans = ~arg_1
+                ans = ~ arg_1
             # encode response here
 
             # send response here
