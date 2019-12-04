@@ -38,12 +38,19 @@ while True:
     
             new_len = data[0]
             req_id = struct.unpack("b", data[1])[0]
-            err = data[2]
-            ans = data[3:]
-            ans = b''.join(ans)
-            ans = struct.unpack(">i", ans)[0]
-            
-            req = Request(new_len, req_id, er)
+            op_code = data[2]
+
+            op_num = data[3]
+            arg_1 = data[4:5]
+            arg_1 = int.from_bytes(arg_1, byteorder="big", signed="True")
+            arg_2 = data[5:]
+            arg_2 = int.from_bytes(arg_2, byteorder="big", signed="True")
+
+            # do math here
+
+            # encode response here
+
+            # send response here
 
             if data:
                 connection.sendall(data)
