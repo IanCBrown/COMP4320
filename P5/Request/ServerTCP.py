@@ -43,11 +43,25 @@ while True:
             op_num = data[3]
             arg_1 = data[4:5]
             arg_1 = int.from_bytes(arg_1, byteorder="big", signed="True")
-            arg_2 = data[5:]
-            arg_2 = int.from_bytes(arg_2, byteorder="big", signed="True")
-
+            if (op_num == 2):
+                arg_2 = data[5:]
+                arg_2 = int.from_bytes(arg_2, byteorder="big", signed="True")
+            ans = 0
             # do math here
-
+            if op_code == 0:
+                ans = arg_1 + arg_2
+            if op_code == 1:
+                ans = arg_1 - arg_2
+            if op_code == 2:
+                ans = arg_1 * arg_2
+            if op_code == 3:
+                ans = arg_1 / arg_2
+            if op_code == 4:
+                ans = arg_1 >> arg_2
+            if op_code == 5:
+                ans = arg_1 << arg_2
+            if op_code == 6:
+                ans = ~arg_1
             # encode response here
 
             # send response here
