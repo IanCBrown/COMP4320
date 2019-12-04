@@ -3,13 +3,12 @@ import time
 import sys
 import struct
 
-# Resources:
-# https://pymotw.com/2/socket/tcp.html
+# Run with python 2.7
 
 TCP_IP = "127.0.0.1"
 
 # default port number
-if sys.argv[1] == "":
+if len(sys.argv) < 2:
     TCP_PORT = 10012
 else:
     TCP_PORT = int(sys.argv[1])
@@ -35,40 +34,49 @@ while True:
         while True:
             data = connection.recv(1024)
             if data:
-                connection.sendall(data)
-                print(data)
                 data = list(data)
-
                 new_len = data[0]
-                req_id = struct.unpack("b", data[1])[0]
-                op_code = data[2]
-
-                op_num = data[3]
+                req_id = data[1]
+                op_code = struct.unpack("b", data[2])[0]
+                op_num = struct.unpack("b", data[3])[0]
                 arg_1 = data[4:6]
-                arg_1 = struct.unpack(">i", arg_1)[0]
+                arg_1 = b''.join(arg_1)
+                arg_1 = struct.unpack(">h", arg_1)[0]
                 if (op_num == 2):
-                    arg_2 = data[6:]
-                    arg_2 = struct.unpack(">i", arg_2)[0]
+                    arg_2 = data[6:]                                                  
+                    arg_2 = b''.join(arg_2)
+                    arg_2 = struct.unpack(">h", arg_2)[0]           
                 ans = 0
-                # do math here
-                if op_code == 0:
-                    ans = arg_1 + arg_2
-                if op_code == 1:
-                    ans = arg_1 - arg_2
-                if op_code == 2:
-                    ans = arg_1 * arg_2
-                if op_code == 3:
-                    ans = arg_1 / arg_2
-                if op_code == 4:
-                    ans = arg_1 >> arg_2
-                if op_code == 5:
-                    ans = arg_1 << arg_2
-                if op_code == 6:
-                    ans = ~ arg_1
-                # encode response here
+                
+                err = 0 
+                if new_len >= 7 or new_len <= 8:
+                    # do math here
+                    if op_code == 1:
+                        ans = arg_1 + arg_2
+                    if op_code == 2:
+                        ans = arg_1 - arg_2
+                    if op_code == 3:
+                        ans = arg_1 * arg_2
+                    if op_code == 4:
+                        ans = arg_1 / arg_2
+                    if op_code == 5:
+                        ans = arg_1 >> arg_2
+                    if op_code == 6:
+                        ans = arg_1 << arg_2
+                    if op_code == 7:
+                        ans = ~arg_1
+                else:
+                    err = 127
 
-                # send response here
+                # encode and send response here
+                ans = struct.pack(">i", ans)
+                # ans = bytes(ans)
+                transport = bytearray([new_len, req_id, err])
+                transport.extend(ans)
+                print 'Response to client'
+                print(list(map(hex, list(transport))))
 
+                connection.sendall(transport)
     
     finally:
         connection.close()

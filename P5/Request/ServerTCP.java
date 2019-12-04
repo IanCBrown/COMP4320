@@ -58,8 +58,9 @@ public class ServerTCP {
 		out.writeByte(request_id);
 		out.writeByte(err);
 		out.writeInt(answer);
-		out.flush();
+		out.flush();		
 		reply = buf.toByteArray();
+		System.out.println(reply.length); 
 		OutputStream out_reply = clntSock.getOutputStream(); // Get a handle onto Output Stream
 		out_reply.write(reply); // send
 	}
